@@ -110,4 +110,4 @@ Outputs:
   Website:
     Value: !GetAtt CloudFrontDistribution.DomainName
   FrontendBucketName:
-    Value: !GetAtt  FrontendBucket.Arn
+    Value: !Ref FrontendBucket
