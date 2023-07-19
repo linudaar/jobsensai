@@ -10,7 +10,7 @@ function App() {
   }, [setGreeting]);
   
   return (
-    <div>Greeting: {greeting}</div>
+    <div>Greetings: {greeting}</div>
   );
 } 
 
