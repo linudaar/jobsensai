@@ -112,9 +112,3 @@ Outputs:
     Value: !GetAtt CloudFrontDistribution.DomainName
   FrontendBucketName:
     Value: !Ref FrontendBucket
-
-Metadata:
-  AWS::CloudFormation::Interface:
-     Tags:
-      - Key: live
-        Value: "yes"
