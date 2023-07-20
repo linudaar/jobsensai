@@ -10,7 +10,7 @@ function App() {
   }, [setGreeting]);
   
   return (
-    <div>Greetings from the backend: {greeting}</div>
+    <><h1>Hello World!</h1><div>Greetings from the backend: {greeting}</div></>
   );
 } 
 
