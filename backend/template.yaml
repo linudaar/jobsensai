@@ -41,13 +41,13 @@ Resources:
               OriginAccessIdentity: !Sub "origin-access-identity/cloudfront/${CloudFrontOriginAccessIdentity}"
           - Id: Backend
             DomainName: !Sub "${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com"
-            # OriginPath: "/Prod"
+            OriginPath: "/Prod"
             CustomOriginConfig:
               OriginProtocolPolicy: https-only
         DefaultCacheBehavior:
           TargetOriginId: FrontendBucket
           ViewerProtocolPolicy: redirect-to-https
-          AllowedMethods: ['GET', 'HEAD', 'OPTIONS'] # Add OPTIONS to allow CORS preflight requests
+          AllowedMethods: [GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE]
           ForwardedValues:
             QueryString: true
         CacheBehaviors:
