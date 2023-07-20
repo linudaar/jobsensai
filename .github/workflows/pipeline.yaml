@@ -70,7 +70,7 @@ jobs:
       - name: Fetch CloudFront Distribution ID
         id: get_cf_id
         run: |
-        CLOUDFRONT_DISTRIBUTION_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[?Tags.Items[?Key=='live' && Value=='yes']].Id" --output text)
+          CLOUDFRONT_DISTRIBUTION_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[?Tags.Items[?Key=='live' && Value=='yes']].Id" --output text)
           echo "CLOUDFRONT_DISTRIBUTION_ID=$CLOUDFRONT_DISTRIBUTION_ID" >> $GITHUB_ENV
       # CloudFront Cache Invalidation Step
       - name: CloudFront Cache Invalidation
