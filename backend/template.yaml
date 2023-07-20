@@ -40,8 +40,7 @@ Resources:
             S3OriginConfig:
               OriginAccessIdentity: !Sub "origin-access-identity/cloudfront/${CloudFrontOriginAccessIdentity}"
           - Id: Backend
-            # DomainName: !Sub "${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com"
-            DomainName: dv5l7o77wjd33.cloudfront.net
+            DomainName: !Sub "${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com"
             # OriginPath: "/Prod"
             CustomOriginConfig:
               OriginProtocolPolicy: https-only
