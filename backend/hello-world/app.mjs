@@ -77,9 +77,3 @@ export const lambdaHandler = async (event, context) => {
   };
   
 };
-
-// Step 2: Handle the LinkedIn callback
-export const callback = async (event, context) => {
-  const code = event.queryStringParameters.code;
-  
-};
