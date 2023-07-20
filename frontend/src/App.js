@@ -4,7 +4,9 @@ function App() {
   const [access_token, setAccessToken] = useState();
   
   useEffect(() => {
-    fetch('/api/hello')
+    fetch('/api/hello',{
+        credentials: 'include'
+      })
       .then(res => res.json())
       .then(response => setAccessToken(response.access_token))
   }, [setAccessToken]);
