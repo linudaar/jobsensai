@@ -27,15 +27,6 @@ Resources:
           Properties:
             Path: /api/hello
             Method: any
-            RestApiId:
-              Ref: ServerlessRestApi
-            Integration:
-              Type: AWS_PROXY
-              IntegrationHttpMethod: POST
-              Uri:
-                Fn::Sub:
-                  - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunction.Arn}/invocations
-                  - { LambdaFunction: !GetAtt HelloWorldFunction.Arn }
   FrontendBucket:
     Type: AWS::S3::Bucket
 
