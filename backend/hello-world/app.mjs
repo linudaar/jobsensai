@@ -11,8 +11,8 @@
  * 
  */
 
-const axios = require('axios');
-const querystring = require('querystring');
+import axios from 'axios';
+import querystring from 'querystring';
 
 const LINKEDIN_CLIENT_ID = process.env.LINKEDIN_CLIENT_ID;
 const LINKEDIN_CLIENT_SECRET = process.env.LINKEDIN_CLIENT_SECRET;
