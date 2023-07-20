@@ -27,6 +27,15 @@ Resources:
           Properties:
             Path: /api/hello
             Method: any
+            RestApiId:
+              Ref: ServerlessRestApi
+            Integration:
+              Type: AWS_PROXY
+              IntegrationHttpMethod: POST
+              Uri:
+                Fn::Sub:
+                  - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunction.Arn}/invocations
+                  - { LambdaFunction: !GetAtt HelloWorldFunction.Arn }
   FrontendBucket:
     Type: AWS::S3::Bucket
 
@@ -40,13 +49,15 @@ Resources:
             S3OriginConfig:
               OriginAccessIdentity: !Sub "origin-access-identity/cloudfront/${CloudFrontOriginAccessIdentity}"
           - Id: Backend
-            DomainName: !Sub "${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com"
-            OriginPath: "/Prod"
+            # DomainName: !Sub "${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com"
+            DomainName: https://dv5l7o77wjd33.cloudfront.net/api/hello
+            # OriginPath: "/Prod"
             CustomOriginConfig:
               OriginProtocolPolicy: https-only
         DefaultCacheBehavior:
           TargetOriginId: FrontendBucket
           ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods: ['GET', 'HEAD', 'OPTIONS'] # Add OPTIONS to allow CORS preflight requests
           ForwardedValues:
             QueryString: true
         CacheBehaviors:
@@ -111,3 +122,9 @@ Outputs:
     Value: !GetAtt CloudFrontDistribution.DomainName
   FrontendBucketName:
     Value: !Ref FrontendBucket
+
+Metadata:
+  AWS::CloudFormation::Interface:
+     Tags:
+      - Key: live
+        Value: "yes"
