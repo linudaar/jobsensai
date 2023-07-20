@@ -59,6 +59,12 @@ Resources:
             AllowedMethods: [GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE]
             ForwardedValues:
               QueryString: true
+          - TargetOriginId: FrontendBucket
+            PathPattern: "api/hello"  # Add this line for the LinkedIn OAuth endpoint
+            ViewerProtocolPolicy: redirect-to-https
+            AllowedMethods: [GET,HEAD,OPTIONS]
+            ForwardedValues:
+              QueryString: true
         Enabled: true
         DefaultRootObject: index.html
 

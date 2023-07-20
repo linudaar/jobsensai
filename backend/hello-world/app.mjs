@@ -18,7 +18,8 @@ const LINKEDIN_CLIENT_SECRET = process.env.LINKEDIN_CLIENT_SECRET;
 const REDIRECT_URI = 'https://dv5l7o77wjd33.cloudfront.net/api/hello'; // Set this to your Lambda endpoint or API Gateway URL
 
 export const lambdaHandler = async (event, context) => {
-  
+  console.log("executing lambda handler ");
+
   const code = event.queryStringParameters?.code;
   
   if (code) {
@@ -57,6 +58,7 @@ export const lambdaHandler = async (event, context) => {
       };
     }
   } else {
+    console.log("Initiating oauth flow with LI ");
     const authorizationUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${LINKEDIN_CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&state=some-state&scope=r_liteprofile%20r_emailaddress`;
     console.log("CLIENT ID", LINKEDIN_CLIENT_ID);
     return {
