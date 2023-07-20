@@ -22,7 +22,6 @@ const REDIRECT_URI = 'https://8ddujis8q0.execute-api.us-east-1.amazonaws.com/Pro
 export const lambdaHandler = async (event, context) => {
     const authorizationUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${LINKEDIN_CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&state=some-state&scope=r_liteprofile%20r_emailaddress`;
     console.log("CLIENT ID", LINKEDIN_CLIENT_ID);
-    
     return {
       statusCode: 302,
       headers: {
@@ -36,7 +35,7 @@ export const lambdaHandler = async (event, context) => {
   exports.callback = async (event, context) => {
     const code = event.queryStringParameters.code;
     console.log(">> in callback", event);
-
+    
     // Step 3: Exchange the authorization code for an access token
     const tokenEndpoint = 'https://www.linkedin.com/oauth/v2/accessToken';
     const tokenData = querystring.stringify({

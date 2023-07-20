@@ -1,16 +1,16 @@
 import { useEffect, useState, React } from 'react';
 
 function App() {
-  const [greeting, setGreeting] = useState();
+  const [access_token, setAccessToken] = useState();
   
   useEffect(() => {
     fetch('/api/hello')
       .then(res => res.json())
-      .then(greeting => setGreeting(greeting.message))
-  }, [setGreeting]);
+      .then(response => setAccessToken(response.access_token))
+  }, [setAccessToken]);
   
   return (
-    <div><h1>Hello World</h1> greetings from the backend: {greeting} v1417</div>
+    <div><h1>Hello World</h1> greetings from the backend: {access_token} v1417</div>
   );
 } 
 
