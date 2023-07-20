@@ -70,7 +70,7 @@ jobs:
       - name: Fetch CloudFront Distribution ID
         id: get_cf_id
         run: |
-          CLOUDFRONT_DISTRIBUTION_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[?Tags.Items[?Key=='live' && Value=='yes']].Id" --output text)
+          CLOUDFRONT_DISTRIBUTION_ID=$(aws resourcegroupstaggingapi get-resources --region us-east-1 --tag-filters Key=live,Values=yes --resource-type-filters 'cloudfront' --tags-per-page 100 | jq -r ".ResourceTagMappingList[].ResourceARN" | sed 's:.*/::')
           echo "CLOUDFRONT_DISTRIBUTION_ID=$CLOUDFRONT_DISTRIBUTION_ID" >> $GITHUB_ENV
       # CloudFront Cache Invalidation Step
       - name: CloudFront Cache Invalidation
