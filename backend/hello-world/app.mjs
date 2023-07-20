@@ -18,8 +18,8 @@ const LINKEDIN_CLIENT_SECRET = process.env.LINKEDIN_CLIENT_SECRET;
 const REDIRECT_URI = 'https://dv5l7o77wjd33.cloudfront.net/api/hello'; // Set this to your Lambda endpoint or API Gateway URL
 
 export const lambdaHandler = async (event, context) => {
-  console.log("executing lambda handler ");
-
+  const requestOrigin = event.headers.origin;
+  console.log("executing lambda handler, origin: ", requestOrigin);
   const code = event.queryStringParameters?.code;
   
   if (code) {
@@ -45,8 +45,7 @@ export const lambdaHandler = async (event, context) => {
       // Use the access token from the response
       const accessToken = response.data.access_token;
       // Now, you can make API requests to LinkedIn on behalf of the user using the access token
-      const requestOrigin = event.headers.origin;
-
+      
       return {
         statusCode: 200,
         headers: {
@@ -70,6 +69,9 @@ export const lambdaHandler = async (event, context) => {
     return {
       statusCode: 302,
       headers: {
+        'Access-Control-Allow-Origin': requestOrigin, // Update this with the allowed origin if known
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'OPTIONS,GET,POST', // Add the allowed HTTP methods
         Location: authorizationUrl,
         'Cache-Control': 'no-cache' // Prevent caching of the redirect response
       }
