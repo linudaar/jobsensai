@@ -53,18 +53,29 @@ jobs:
               --stack-name sam-app \
               --query 'Stacks[0].Outputs[?OutputKey==`FrontendBucketName`].OutputValue' \
               --output text \
-          )" >> $GITHUB_ENV
-          echo "frontend_bucket_name: ${{ env.frontend_bucket_name }}"
-          
+          )" >> $GITHUB_ENV          
       - name: Build frontend
         working-directory: frontend
         run: npm install && npm run build
       - name: Clear frontend bucket
         run: |
+          echo "frontend_bucket_name: ${{ env.frontend_bucket_name }}"
           aws s3 rm s3://${{ env.frontend_bucket_name }} --recursive
       - name: Deploy frontend
         run: |
           aws s3 cp frontend/build \
             s3://${{ env.frontend_bucket_name }} \
             --recursive
-      
+      # Fetch CloudFront Distribution ID with "live" tag
+      - name: Fetch CloudFront Distribution ID
+        id: get_cf_id
+        run: |
+          CF_DISTRIBUTION_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[?Tags.Items[?Key=='live' && Value=='yes']].Id" --output text)
+          echo "CLOUDFRONT_DISTRIBUTION_ID=$CF_DISTRIBUTION_ID" >> $GITHUB_ENV
+      # CloudFront Cache Invalidation Step
+      - name: CloudFront Cache Invalidation
+        run: |
+          echo "CLOUDFRONT_DISTRIBUTION_ID = ${{ env.CLOUDFRONT_DISTRIBUTION_ID }}"
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"
