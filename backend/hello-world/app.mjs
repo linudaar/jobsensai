@@ -19,7 +19,7 @@ const REDIRECT_URI = 'https://dv5l7o77wjd33.cloudfront.net/api/hello'; // Set th
 
 export const lambdaHandler = async (event, context) => {
   // const requestOrigin = event.headers.origin;
-  const requestOrigin = "https://dv5l7o77wjd33.cloudfront.net";
+  const requestOrigin = "https://dv5l7o77wjd33.cloudfront.net"; 
   console.log("executing lambda handler, origin: ", requestOrigin);
   const code = event.queryStringParameters?.code;
   
