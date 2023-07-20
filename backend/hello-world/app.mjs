@@ -15,7 +15,7 @@ import querystring from 'querystring';
 
 const LINKEDIN_CLIENT_ID = process.env.LINKEDIN_CLIENT_ID;
 const LINKEDIN_CLIENT_SECRET = process.env.LINKEDIN_CLIENT_SECRET;
-const REDIRECT_URI = 'https://8ddujis8q0.execute-api.us-east-1.amazonaws.com/Prod/api/hello'; // Set this to your Lambda endpoint or API Gateway URL
+const REDIRECT_URI = 'https://dv5l7o77wjd33.cloudfront.net/api/hello'; // Set this to your Lambda endpoint or API Gateway URL
 
 export const lambdaHandler = async (event, context) => {
   const authorizationUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${LINKEDIN_CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&state=some-state&scope=r_liteprofile%20r_emailaddress`;
