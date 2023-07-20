@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, React } from 'react';
 
 function App() {
   const [greeting, setGreeting] = useState();
@@ -10,7 +10,7 @@ function App() {
   }, [setGreeting]);
   
   return (
-    <><h1>Hello World!</h1><div>Greetings from the backend: {greeting}</div></>
+    <div>Hello World, greetings from the backend: {greeting}</div>
   );
 } 
 
