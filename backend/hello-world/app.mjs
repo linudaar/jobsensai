@@ -45,9 +45,15 @@ export const lambdaHandler = async (event, context) => {
       // Use the access token from the response
       const accessToken = response.data.access_token;
       // Now, you can make API requests to LinkedIn on behalf of the user using the access token
-  
+      const requestOrigin = event.headers.origin;
+
       return {
         statusCode: 200,
+        headers: {
+          'Access-Control-Allow-Origin': requestOrigin, // Update this with the allowed origin if known
+          'Access-Control-Allow-Headers': 'Content-Type',
+          'Access-Control-Allow-Methods': 'OPTIONS,GET,POST' // Add the allowed HTTP methods
+        },
         body: JSON.stringify({ access_token: accessToken })
       };
     } catch (error) {
