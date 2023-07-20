@@ -35,6 +35,9 @@ jobs:
       - name: Deploy backend
         working-directory: backend
         run: |
+          echo "PIPELINE_EXECUTION_ROLE = ${{env.PIPELINE_EXECUTION_ROLE}}"
+          echo "ARTIFACTS_BUCKET = ${ARTIFACTS_BUCKET}"
+          echo "CLOUDFORMATION_EXECUTION_ROLE = ${CLOUDFORMATION_EXECUTION_ROLE}"
           sam deploy --stack-name sam-app \
             --capabilities CAPABILITY_IAM \
             --region ${REGION} \
@@ -51,6 +54,8 @@ jobs:
               --query 'Stacks[0].Outputs[?OutputKey==`FrontendBucketName`].OutputValue' \
               --output text \
           )" >> $GITHUB_ENV
+          echo "frontend_bucket_name: ${{ env.frontend_bucket_name }}"
+          
       - name: Build frontend
         working-directory: frontend
         run: npm install && npm run build
@@ -62,3 +67,4 @@ jobs:
           aws s3 cp frontend/build \
             s3://${{ env.frontend_bucket_name }} \
             --recursive
+      
