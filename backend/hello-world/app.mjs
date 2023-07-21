@@ -19,9 +19,7 @@ const REDIRECT_URI = 'https://dv5l7o77wjd33.cloudfront.net/api/hello'; // Set th
 
 
 export const lambdaHandler = async (event, context) => {
-  console.log("Calling lambdaHandler...", event);
   const code = JSON.parse(event.body).code;
-  console.log("Got code ", code);
   const tokenEndpoint = 'https://www.linkedin.com/oauth/v2/accessToken';
   const tokenData = querystring.stringify({
     grant_type: 'authorization_code',
@@ -32,7 +30,6 @@ export const lambdaHandler = async (event, context) => {
   });
 
   try {
-    console.log("Try to get acceess token");
     const response = await axios.post(tokenEndpoint, tokenData, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -43,15 +40,34 @@ export const lambdaHandler = async (event, context) => {
     // Now, you can make API requests to LinkedIn on behalf of the user using the access token
     console.log("got access token ", accessToken);
 
-    return {
-      statusCode: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*', // Or update this with the allowed origin if known
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'OPTIONS,GET,POST',
-      },
-      body: JSON.stringify({ access_token: accessToken }),
-    };
+    // Now, you can make API requests to LinkedIn on behalf of the user using the access token
+    const jobTitle = 'Software Engineer'; // Replace this with the desired job title
+    const searchEndpoint = `https://api.linkedin.com/v2/jobSearch?keywords=${encodeURIComponent(jobTitle)}`;
+
+    try {
+      const jobResponse = await axios.get(searchEndpoint, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        }
+      });
+
+      // Process the job search response
+      const jobs = jobResponse.data;
+
+      // Do whatever you want with the job search results
+      console.log(jobs);
+
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ jobs })
+      };
+    } catch (error) {
+      console.error('Error searching for jobs:', error);
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ error: 'Failed to search for jobs' })
+      };
+    }
   } catch (error) {
     console.error('Error exchanging authorization code for access token:', error);
     return {
