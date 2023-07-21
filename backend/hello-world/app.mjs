@@ -17,6 +17,50 @@ const LINKEDIN_CLIENT_ID = process.env.LINKEDIN_CLIENT_ID;
 const LINKEDIN_CLIENT_SECRET = process.env.LINKEDIN_CLIENT_SECRET;
 const REDIRECT_URI = 'https://dv5l7o77wjd33.cloudfront.net/api/hello'; // Set this to your Lambda endpoint or API Gateway URL
 
+
+export const lambdaHandler = async (event, context) => {
+  console.log("Calling lambdaHandler...", event);
+  const code = JSON.parse(event.body).code;
+  console.log("Got code ", code);
+  const tokenEndpoint = 'https://www.linkedin.com/oauth/v2/accessToken';
+  const tokenData = querystring.stringify({
+    grant_type: 'authorization_code',
+    code,
+    redirect_uri: REDIRECT_URI,
+    client_id: LINKEDIN_CLIENT_ID,
+    client_secret: LINKEDIN_CLIENT_SECRET,
+  });
+
+  try {
+    console.log("Try to get acceess token");
+    const response = await axios.post(tokenEndpoint, tokenData, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
+
+    const accessToken = response.data.access_token;
+    // Now, you can make API requests to LinkedIn on behalf of the user using the access token
+    console.log("got access token ", accessToken);
+
+    return {
+      statusCode: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*', // Or update this with the allowed origin if known
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'OPTIONS,GET,POST',
+      },
+      body: JSON.stringify({ access_token: accessToken }),
+    };
+  } catch (error) {
+    console.error('Error exchanging authorization code for access token:', error);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: 'Failed to obtain access token' }),
+    };
+  }
+};
+/* 
 export const lambdaHandler = async (event, context) => {
   // const requestOrigin = event.headers.origin;
   const requestOrigin = "https://dv5l7o77wjd33.cloudfront.net"; 
@@ -79,4 +123,4 @@ export const lambdaHandler = async (event, context) => {
     };
   };
   
-};
+}; */
