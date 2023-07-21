@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 function App() {
-  const [access_token, setAccessToken] = useState();
+  const [jobs, setJobs] = useState([]);
 
   // Function to handle the OAuth2.0 flow
   const initiateOAuthFlow = () => {
@@ -31,7 +31,10 @@ function App() {
         body: JSON.stringify({ code: authorizationCode }),
       })
         .then((res) => res.json())
-        .then((response) => setAccessToken(response.access_token));
+        .then((data) => {
+          // Handle the response from the Lambda function
+          setJobs(data.jobs);
+        });
     } else {
       // If the URL doesn't contain the authorization code, initiate the OAuth2.0 flow
       initiateOAuthFlow();
@@ -41,7 +44,21 @@ function App() {
   return (
     <div>
       <h1>Hello World</h1>
-      Greetings from the backend: {response}
+      {jobs.length > 0 ? (
+        <div>
+          <h2>Job Search Results:</h2>
+          <ul>
+            {jobs.map((job) => (
+              <li key={job.id}>
+                {/* Display the job information here */}
+                Title: {job.title}, Company: {job.companyName}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <p>No job search results yet.</p>
+      )}
     </div>
   );
 }
