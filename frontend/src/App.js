@@ -41,7 +41,7 @@ function App() {
   return (
     <div>
       <h1>Hello World</h1>
-      Greetings from the backend: {jobs}
+      Greetings from the backend: {response}
     </div>
   );
 }
