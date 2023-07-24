@@ -39,11 +39,10 @@ function App() {
     const urlParams = new URLSearchParams(window.location.search);
     const authorizationCode = urlParams.get('code');
 
-    
-    
     if (authorizationCode) {
       
       const codeVerifier = sessionStorage.getItem('codeVerifier');
+      console.log("calling hello with codeVerifier", codeVerifier);
 
       // If the URL contains the authorization code, call the Lambda function to exchange it for an access token
       fetch('/api/hello', {
@@ -51,8 +50,7 @@ function App() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ code: authorizationCode, code_verifier: codeVerifier }),
-
+        body: JSON.stringify({ code: authorizationCode, code_verifier: codeVerifier })
       })
         .then((res) => res.json())
         .then((data) => {
