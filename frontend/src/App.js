@@ -18,6 +18,7 @@ function App() {
   // Function to convert the code verifier to a code challenge for PKCE
   const generateCodeChallenge = (codeVerifier) => {
     const buffer = new TextEncoder().encode(codeVerifier);
+    console.log("buffer", buffer);
     return base64URLEncode(hash(buffer));
   };
 
@@ -30,7 +31,10 @@ function App() {
 
   const hash = async (buffer) => {
     const msgUint8 = new Uint8Array(buffer);
+    console.log("msgUint8", msgUint8);
     const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+    console.log("hashBuffer", hashBuffer);
+
     return hashBuffer;
   }; 
 
@@ -58,10 +62,7 @@ function App() {
           // Handle the response from the Lambda function
           setJobs(data.jobs);
         });
-    } else {
-      // If the URL doesn't contain the authorization code, initiate the OAuth2.0 flow
-      initiateOAuthFlow();
-    }
+    } 
   });
 
   // Function to handle the OAuth2.0 flow
