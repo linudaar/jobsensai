@@ -38,7 +38,8 @@ function App() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const authorizationCode = urlParams.get('code');
-
+    console.log("calling useEffect with params ", urlParams);
+    
     if (authorizationCode) {
       
       const codeVerifier = sessionStorage.getItem('codeVerifier');
@@ -63,7 +64,7 @@ function App() {
   // Function to handle the OAuth2.0 flow
   const initiateOAuthFlow = () => {
     const redirect_uri = encodeURIComponent(
-      'https://dv5l7o77wjd33.cloudfront.net/api/hello' // Lambda endpoint or API Gateway URL
+      'https://dv5l7o77wjd33.cloudfront.net' // Lambda endpoint or API Gateway URL
     );
     //const scope = encodeURIComponent('r_liteprofile r_emailaddress');
     const codeVerifier = generateCodeVerifier();
