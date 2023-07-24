@@ -3,6 +3,45 @@ import { useEffect, useState } from 'react';
 function App() {
   const [jobs, setJobs] = useState([]);
 
+
+  // Function to generate a random code verifier for PKCE
+  const generateCodeVerifier = () => {
+    const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
+    let codeVerifier = '';
+    for (let i = 0; i < 128; i++) {
+      const randomIndex = Math.floor(Math.random() * charset.length);
+      codeVerifier += charset[randomIndex];
+    }
+    return codeVerifier;
+  };
+
+  // Function to convert the code verifier to a code challenge for PKCE
+  const generateCodeChallenge = (codeVerifier) => {
+    const buffer = new TextEncoder().encode(codeVerifier);
+    return base64URLEncode(hash(buffer));
+  };
+
+  const base64URLEncode = (str) => {
+    return btoa(String.fromCharCode.apply(null, new Uint8Array(str)))
+      .replace(/=/g, '')
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_');
+  };
+
+  const hash = async (buffer) => {
+    const msgUint8 = new Uint8Array(buffer);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+    return hashBuffer;
+  };
+
+
+  const codeVerifier = generateCodeVerifier();
+  const codeChallenge = generateCodeChallenge(codeVerifier);
+
+  // Save the code verifier to session storage to use later in the token exchange step
+  sessionStorage.setItem('codeVerifier', codeVerifier);
+
+
   // Function to handle the OAuth2.0 flow
   const initiateOAuthFlow = () => {
     const redirect_uri = encodeURIComponent(
@@ -14,11 +53,16 @@ function App() {
     const state = 'some-state'; // Replace with your desired state value
 
     //const authorizationUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=78c2ce7l4iq3c8&redirect_uri=${redirect_uri}&state=${state}&scope=${scope}`;
-    const authorizationUrl = `https://secure.indeed.com/oauth/v2/authorize?response_type=code&client_id=ce8120a4623ce873a27f2b4ae12b96e438fffb649bbc0f9870b498bb7d528b34&redirect_uri=${redirect_uri}&state=${state}&scope=${scope}`;
+    const authorizationUrl = `https://secure.indeed.com/oauth/v2/authorize?response_type=code&client_id=ce8120a4623ce873a27f2b4ae12b96e438fffb649bbc0f9870b498bb7d528b34&redirect_uri=${redirect_uri}&state=${state}&scope=${scope}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
 
     // Redirect the user to the LinkedIn authorization URL
     window.location.href = authorizationUrl;
   };
+
+
+
+
+
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
