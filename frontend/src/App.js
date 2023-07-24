@@ -45,7 +45,9 @@ function App() {
       );
       //const scope = encodeURIComponent('r_liteprofile r_emailaddress');
       const codeVerifier = generateCodeVerifier();
+      console.log("codeVerifier", codeVerifier);
       const codeChallenge = generateCodeChallenge(codeVerifier);
+      console.log("codeChallenge", codeChallenge);
 
       const scope = encodeURIComponent('email+offline_access');
       const state = 'some-state'; // Replace with your desired state value
