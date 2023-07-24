@@ -16,10 +16,10 @@ function App() {
   };
 
   // Function to convert the code verifier to a code challenge for PKCE
-  const generateCodeChallenge = (codeVerifier) => {
+  const generateCodeChallenge = async (codeVerifier) => {
     const buffer = new TextEncoder().encode(codeVerifier);
     console.log("buffer", buffer);
-    return base64URLEncode(hash(buffer));
+    return hash(buffer)
   };
 
   const base64URLEncode = (str) => {
@@ -32,10 +32,7 @@ function App() {
   const hash = async (buffer) => {
     const msgUint8 = new Uint8Array(buffer);
     console.log("msgUint8", msgUint8);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
-    console.log("hashBuffer", hashBuffer);
-
-    return hashBuffer;
+    return crypto.subtle.digest('SHA-256', msgUint8);
   }; 
 
   useEffect(() => {
@@ -73,20 +70,22 @@ function App() {
     //const scope = encodeURIComponent('r_liteprofile r_emailaddress');
     const codeVerifier = generateCodeVerifier();
     console.log("codeVerifier", codeVerifier);
-    const codeChallenge = generateCodeChallenge(codeVerifier);
-    console.log("codeChallenge", codeChallenge);
-
-    const scope = encodeURIComponent('email+offline_access');
-    const state = 'some-state'; // Replace with your desired state value
-
-    //const authorizationUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=78c2ce7l4iq3c8&redirect_uri=${redirect_uri}&state=${state}&scope=${scope}`;
-    const authorizationUrl = `https://secure.indeed.com/oauth/v2/authorize?response_type=code&client_id=ce8120a4623ce873a27f2b4ae12b96e438fffb649bbc0f9870b498bb7d528b34&redirect_uri=${redirect_uri}&state=${state}&scope=${scope}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
-
-    // Save the code verifier to session storage to use later in the token exchange step
-    sessionStorage.setItem('codeVerifier', codeVerifier);
-
-    // Redirect the user to the LinkedIn authorization URL
-    window.location.href = authorizationUrl;
+    generateCodeChallenge(codeVerifier).then(h => {
+      console.log("h",h);
+      const codeChallenge =  base64URLEncode(h);
+      console.log("codeChallenge", codeChallenge);
+      const scope = encodeURIComponent('email+offline_access');
+      const state = 'some-state'; // Replace with your desired state value
+  
+      //const authorizationUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=78c2ce7l4iq3c8&redirect_uri=${redirect_uri}&state=${state}&scope=${scope}`;
+      const authorizationUrl = `https://secure.indeed.com/oauth/v2/authorize?response_type=code&client_id=ce8120a4623ce873a27f2b4ae12b96e438fffb649bbc0f9870b498bb7d528b34&redirect_uri=${redirect_uri}&state=${state}&scope=${scope}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
+  
+      // Save the code verifier to session storage to use later in the token exchange step
+      sessionStorage.setItem('codeVerifier', codeVerifier);
+  
+      // Redirect the user to the LinkedIn authorization URL
+      window.location.href = authorizationUrl;
+    });
   };
 
 
