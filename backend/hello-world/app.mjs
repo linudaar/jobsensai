@@ -19,8 +19,9 @@ const REDIRECT_URI = 'https://dv5l7o77wjd33.cloudfront.net/api/hello'; // Set th
 
 
 export const lambdaHandler = async (event, context) => {
-  const code = JSON.parse(event.body).code;
-  const tokenEndpoint = 'https://www.linkedin.com/oauth/v2/accessToken';
+  const code = event.queryStringParameters.code;
+  //const tokenEndpoint = 'https://www.linkedin.com/oauth/v2/accessToken';
+  const tokenEndpoint = 'https://apis.indeed.com/oauth/v2/tokens';
   const tokenData = querystring.stringify({
     grant_type: 'authorization_code',
     code,
@@ -39,7 +40,11 @@ export const lambdaHandler = async (event, context) => {
     const accessToken = response.data.access_token;
     // Now, you can make API requests to LinkedIn on behalf of the user using the access token
     console.log("got access token ", accessToken);
-
+    return {
+      statusCode: 200,
+      body: JSON.stringify({})
+    };
+    /*
     // Now, you can make API requests to LinkedIn on behalf of the user using the access token
     const jobTitle = 'Software Engineer'; // Replace this with the desired job title
     const searchEndpoint = `https://api.linkedin.com/v2/jobSearch?keywords=${encodeURIComponent(jobTitle)}`;
@@ -68,6 +73,7 @@ export const lambdaHandler = async (event, context) => {
         body: JSON.stringify({ error: 'Failed to search for jobs' })
       };
     }
+    */
   } catch (error) {
     console.error('Error exchanging authorization code for access token:', error);
     return {
