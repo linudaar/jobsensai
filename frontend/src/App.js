@@ -39,22 +39,21 @@ function App() {
     const urlParams = new URLSearchParams(window.location.search);
     const authorizationCode = urlParams.get('code');
     console.log("calling useEffect with params ", urlParams);
-    
+
     if (authorizationCode) {
       
       const codeVerifier = sessionStorage.getItem('codeVerifier');
       console.log("calling hello with codeVerifier", codeVerifier);
 
       // If the URL contains the authorization code, call the Lambda function to exchange it for an access token
-      fetch('/api/hello', {
-        method: 'POST',
+      fetch('/api/hello?code='+authorizationCode+'&code_verifier='+codeVerifier, {
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ code: authorizationCode, code_verifier: codeVerifier })
-      })
+        }})
         .then((res) => res.json())
         .then((data) => {
+          console.log("response data ", data);
           // Handle the response from the Lambda function
           setJobs(data.jobs);
         });
