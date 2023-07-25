@@ -17,7 +17,7 @@ import querystring from 'querystring';
 //const LINKEDIN_CLIENT_SECRET = process.env.LINKEDIN_CLIENT_SECRET;
 const INDEED_CLIENT_ID = process.env.INDEED_CLIENT_ID;
 
-const REDIRECT_URI = 'https://dv5l7o77wjd33.cloudfront.net/api/hello'; // Set this to your Lambda endpoint or API Gateway URL
+const REDIRECT_URI = 'https://dv5l7o77wjd33.cloudfront.net'; // Set this to your Lambda endpoint or API Gateway URL
 
 
 export const lambdaHandler = async (event, context) => {
@@ -25,7 +25,6 @@ export const lambdaHandler = async (event, context) => {
   
   const code = event.queryStringParameters.code;
   const codeVerifier = event.queryStringParameters.code_verifier;
-  console.log("lambdaHandler codeverifiere", codeVerifier);
 
   //const tokenEndpoint = 'https://www.linkedin.com/oauth/v2/accessToken';
   const tokenEndpoint = 'https://apis.indeed.com/oauth/v2/tokens';
@@ -36,6 +35,7 @@ export const lambdaHandler = async (event, context) => {
     client_id: INDEED_CLIENT_ID, 
     code_verifier: codeVerifier
   });
+  console.log("tokenData ", tokenData);
 
   try {
     const response = await axios.post(tokenEndpoint, tokenData, {
