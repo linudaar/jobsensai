@@ -21,10 +21,12 @@ const REDIRECT_URI = 'https://dv5l7o77wjd33.cloudfront.net/api/hello'; // Set th
 
 
 export const lambdaHandler = async (event, context) => {
+  console.log("executing lambda handler with querystringparams", event.queryStringParameters);
+  
   const code = event.queryStringParameters.code;
   const codeVerifier = event.queryStringParameters.code_verifier;
   console.log("lambdaHandler codeverifiere", codeVerifier);
-  
+
   //const tokenEndpoint = 'https://www.linkedin.com/oauth/v2/accessToken';
   const tokenEndpoint = 'https://apis.indeed.com/oauth/v2/tokens';
   const tokenData = querystring.stringify({
