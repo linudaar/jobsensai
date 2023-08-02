@@ -33,7 +33,7 @@ function App() {
     const state = 'some-state';
     const client_id = `78c2ce7l4iq3c8&`;
     const response_type = `code`;
-    const authorizationUrl = `https://www.linkedin.com/oauth/v2/authorization`
+    const authorizationUrl = `https://www.linkedin.com/oauth/v2/authorization?`
                             + `response_type=${response_type}&`
                             + `client_id=${client_id}&`
                             + `redirect_uri=${redirect_uri}&`
