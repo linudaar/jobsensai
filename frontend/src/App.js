@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 function App() {
-  const [jobs, setJobs] = useState([]);
+  const [jobs] = useState([]);
 
    // Function to generate a random code verifier for PKCE
    const generateCodeVerifier = () => {
