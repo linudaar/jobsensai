@@ -64,7 +64,8 @@ function App() {
     const codeVerifier = generateCodeVerifier();
     generateCodeChallenge(codeVerifier).then(h => {
       const codeChallenge =  base64URLEncode(h);
-      const scope = encodeURIComponent('email+offline_access');
+      //const scope = encodeURIComponent('email+offline_access'); Indeed Scope
+      const scope = encodeURIComponent('r_liteprofile+r_emailaddress+w_member_social');
       const state = 'some-state'; // Replace with your desired state value
   
       const authorizationUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=78c2ce7l4iq3c8&redirect_uri=${redirect_uri}&state=${state}&scope=${scope}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
